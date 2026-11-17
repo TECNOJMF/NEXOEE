@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NEXO · Aprender a convivir</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6d5dfc">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="NEXO">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#f7f5ff;--card:#fff;--ink:#2a2540;--mute:#6f6a88;--brand:#6d5dfc;--brand2:#22d3ee;--line:#e7e3f7;--warn:#fff4e5;--warnt:#8a4b00;--vs:#efeeff;--r:22px}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#12101f;--card:#1d1934;--ink:#ece9ff;--mute:#a8a3c7;--line:#332f55;--warn:#3a2a10;--warnt:#ffcf8a;--vs:#262248}}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 20% 0%,#e9e4ff 0,transparent 45%),var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-top:env(safe-area-inset-top,0)}
+.app{max-width:760px;height:100%;margin:0 auto;display:flex;flex-direction:column}
+header{padding:10px 14px;display:flex;align-items:center;gap:10px}
+header h1{font-size:19px;margin:0;flex:1}
+.b,select{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer;max-width:130px}
+main{flex:1;overflow-y:auto;padding:14px 16px 24px}
+h2{margin:.2em 0 .4em;font-size:23px}h3{margin:.2em 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin:12px 0;box-shadow:0 6px 18px rgba(80,60,180,.08);animation:pop .4s ease both}
+.card p{margin:.4em 0}.card ol{margin:.3em 0;padding-left:20px}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.vs{background:var(--vs);border-radius:16px;padding:10px 14px;margin-top:10px;font-size:15px}
+.say,.lnk{border:0;background:none;color:var(--brand);font:inherit;font-size:14px;cursor:pointer;padding:4px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.tile{border:0;background:var(--card);color:var(--ink);border-radius:var(--r);padding:18px 10px;font:inherit;font-weight:700;cursor:pointer;text-align:center;box-shadow:0 6px 18px rgba(80,60,180,.1);transition:transform .15s}
+.tile:active,.opt:active,.chip:active{transform:scale(.96)}
+.tile span{display:block;font-size:30px;margin-bottom:4px}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;padding:13px 16px;margin:9px 0;font:inherit;cursor:pointer;transition:transform .15s,border-color .15s}
+.opt:hover,.tile:hover,.chip:hover{border-color:var(--brand)}
+.chips,.row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 15px;font:inherit;font-size:14px;cursor:pointer;transition:transform .15s}
+.warn{background:var(--warn);color:var(--warnt);border-radius:16px;padding:12px 16px;font-size:15px;margin:12px 0}
+.center{text-align:center}
+.face{width:170px;height:170px;margin:12px auto;border-radius:50%;background:radial-gradient(circle at 35% 30%,#b9b0ff,var(--brand) 55%,#4c3fd6);position:relative;box-shadow:0 14px 40px rgba(109,93,252,.35);transition:transform .9s cubic-bezier(.3,1.4,.6,1),background .6s}
+.face .eye{position:absolute;top:58px;width:18px;height:24px;background:#fff;border-radius:50%;animation:blink 4s infinite}
+.face .l{left:48px}.face .r{right:48px}
+.face .mouth{position:absolute;left:50%;bottom:44px;width:54px;height:24px;transform:translateX(-50%);border-bottom:5px solid #fff;border-radius:0 0 40px 40px;transition:all .5s}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.face.cal{transform:scale(.9)}.face.fel{transform:scale(1.08)}.face.tri .mouth{border-bottom:none;border-top:5px solid #fff;border-radius:40px 40px 0 0;bottom:36px}
+.face.ansi{animation:shake .5s}@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.face.bail{animation:bounce 1s ease 2}@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+.mood{text-align:center;font-weight:700;color:var(--brand);margin:0}
+.emos{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.emo{width:72px;height:72px;border-radius:24px;border:2px dashed var(--line);background:var(--card);font-size:34px;cursor:grab;touch-action:none;transition:transform .15s}
+.emo.drag{opacity:.5;transform:scale(1.1)}
+.drop{min-height:14px;text-align:center;font-weight:600;color:var(--brand)}
+.stars{display:flex;gap:6px;justify-content:center;font-size:28px;margin:8px 0}
+.stars span{opacity:.2;transition:all .4s}.stars span.on{opacity:1;transform:scale(1.2)}
+.mis{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.mis input{width:24px;height:24px;accent-color:var(--brand)}
+details{border-bottom:1px solid var(--line);padding:9px 0}summary{cursor:pointer;font-weight:600}
+input.txt{width:100%;padding:12px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;margin-top:8px}
+nav{display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0)}
+nav button{flex:1;border:0;background:none;color:var(--mute);padding:9px 2px;font:inherit;font-size:11px;cursor:pointer}
+nav button span{display:block;font-size:21px}nav button.on{color:var(--brand);font-weight:700}
+.foot{font-size:12px;color:var(--mute);text-align:center;margin:18px 0 4px}
+.breath{width:140px;height:140px;margin:14px auto;border-radius:50%;background:radial-gradient(circle,#c9c2ff,var(--brand));transition:transform 4s ease-in-out}
+.chat{display:flex;flex-direction:column;gap:10px;max-height:42vh;min-height:140px;overflow-y:auto;padding:6px 2px;margin-top:10px}
+.bub{max-width:88%;padding:12px 15px;border-radius:20px;animation:pop .3s ease both}
+.bub.b{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:6px;box-shadow:0 4px 12px rgba(80,60,180,.07)}
+.bub.u{background:var(--brand);color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+.bub p{margin:.3em 0}.bub .chips{margin:8px 0 0}.bub .vs{margin-top:8px}
+.typing{letter-spacing:4px;color:var(--mute)}
+.inrow{display:flex;gap:8px;margin-top:10px;align-items:center}.inrow .txt{margin-top:0;flex:1}
+</style>
+</head>
+<body>
+<div class="app">
+<header><h1>NEXO</h1><select id="voz" aria-label="Elegir voz" hidden></select><button class="b" id="snd" aria-label="Activar o silenciar audio">🔊 Audio</button></header>
+<main id="v"></main>
+<nav id="nav"></nav>
+</div>
+<script>
+const V={
+ira:['Proverbios 15:1','Una respuesta amable calma el enojo; las palabras duras lo encienden.'],
+oir:['Santiago 1:19','Sé rápido para escuchar, lento para hablar y lento para enojarte.'],
+sol:['Efesios 4:26','Puedes sentir enojo, pero no dejes que te lleve a hacer daño ni lo guardes por muchos días.'],
+pac:['Proverbios 16:32','Tener paciencia y dominio propio vale más que ser el más fuerte.'],
+paz:['Mateo 5:9','Dios ama a quienes buscan la paz y ayudan a reconciliar a los demás.'],
+perd:['Colosenses 3:13','Perdónense unos a otros, así como Dios nos perdona.'],
+regla:['Mateo 7:12','Trata a los demás como te gustaría que te traten a ti.'],
+ans:['Filipenses 4:6-7','Cuéntale a Dios lo que te preocupa; su paz cuidará tu corazón y tu mente.'],
+tri:['Salmo 34:18','Dios está cerca de quienes tienen el corazón herido.'],
+mie:['Isaías 41:10','No temas, porque Dios dice que está contigo y te fortalece.'],
+err:['Proverbios 28:13','Reconocer un error y cambiar trae misericordia y paz.'],
+hon:['Efesios 6:1-3','Escuchar y honrar a tus padres es parte de una vida que va bien.'],
+sab:['Proverbios 9:10','El respeto a Dios es el comienzo de la sabiduría.']};
+const F=[
+{e:'😠',n:'Enojo',k:'ira',face:'ansi',body:'calor en la cara, puños apretados, corazón rápido',tool:'haz la pausa: inhala 4 segundos, sostén 4 y suelta 6. Repite tres veces antes de hablar.',v:'ira',w:['enoj','rabia','furios','pelea','grit','molest']},
+{e:'😢',n:'Tristeza',k:'tri',face:'tri',body:'ganas de llorar, cuerpo cansado, poca energía',tool:'permítete sentirla, toma agua, respira lento y busca a alguien de confianza para contarle.',v:'tri',w:['trist','llor','solo','sola','deprim','nadie']},
+{e:'😨',n:'Miedo',k:'mie',face:'tri',body:'estómago apretado, manos frías, ganas de huir',tool:'pon los pies firmes en el suelo, nombra tres cosas que ves y respira lento.',v:'mie',w:['miedo','asust','mied','pánico','panico','nervi']},
+{e:'😳',n:'Vergüenza',k:'err',face:'cal',body:'cara caliente, ganas de esconderte',tool:'recuerda que equivocarse es humano. Respira y piensa: «Esto pasa y puedo aprender».',v:'err',w:['verg','pena','avergon','humill','ridícul','ridicul']},
+{e:'😤',n:'Frustración',k:'pac',face:'fel',body:'tensión en los hombros, ganas de rendirte o gritar',tool:'suelta los hombros, estira los brazos y haz una pausa de un minuto antes de intentarlo otra vez.',v:'pac',w:['frustr','no puedo','rindo','harto','cansad']}];
+const S=[
+{t:'Me enojé con mi familia',ok:'Es normal enojarse con quienes queremos. Lo importante es qué hacemos con ese enojo.',plan:['Espera a estar calmado antes de hablar.','Piensa qué norma o decisión te molestó y por qué creen tus padres que existe.','Propón un acuerdo con respeto.'],frase:'Me sentí molesto cuando pasó esto. ¿Podemos hablar para encontrar una solución?',v:'hon',w:['mam','papa','papá','famil','casa','hermano']},
+{t:'Tuve un problema con un compañero',ok:'Los conflictos entre compañeros pasan. Se pueden resolver sin pelear.',plan:['Aléjate un momento si estás muy enojado.','Cuenta lo que sentiste sin insultar y escucha su versión.','Busquen juntos una solución; si no se puede, pide ayuda a un docente.'],frase:'Me molestó lo que pasó. Quiero entender tu parte y encontrar una solución.',v:'paz',w:['compa','amig','pele','me pegó','me empuj','burl']},
+{t:'Me llamaron la atención delante de todos',ok:'Sentirte molesto o avergonzado es comprensible. Puedes manejarlo sin empeorarlo.',plan:['No respondas en el momento; respira.','Más tarde, pide hablar en un momento tranquilo.','Explica cómo te sentiste y pregunta cómo manejar estas situaciones.'],frase:'Profesor, quisiera hablar de lo que pasó. Me sentí avergonzado cuando me llamó la atención delante de todos.',v:'oir',w:['profe','docente','regañ','llamo la atención','llamó la atención','colegio','clase']},
+{t:'No cumplí un acuerdo o una tarea',ok:'Equivocarse es parte de aprender. Lo valioso es reconocerlo y reparar.',plan:['Reconoce lo que pasó sin buscar culpables.','Explica el motivo sin poner excusas.','Propón cómo lo vas a corregir y una fecha.'],frase:'No cumplí lo acordado. Lo siento. ¿Puedo repararlo de esta forma?',v:'err',w:['tarea','acuerdo','promesa','olvid','no cumpl']},
+{t:'Alguien me molesta o me hace daño',ok:'Lo que te pasa es importante y no es tu culpa. Mereces estar seguro.',plan:['Aléjate del lugar si puedes.','Cuéntalo hoy a un adulto de confianza.','Anota qué pasó, quién y cuándo, para que te ayuden mejor.'],frase:'Alguien me está molestando y necesito ayuda para sentirme seguro.',v:'mie',serio:1,w:['acos','golpe','amenaz','me pega','me hace daño','bully','abus']}];
+const D=[
+{q:'Un compañero toma tu lápiz sin pedirlo y te enojas.',o:[{t:'Se lo quito y le grito',k:2,r:'Es probable que la discusión crezca y ambos terminen en problemas.'},{t:'Respiro y le digo que me pida las cosas',k:0,r:'Dices lo que sientes sin atacar. Es más probable que te escuche y te respete.'},{t:'No digo nada y me guardo el enojo',k:1,r:'Evitas la pelea hoy, pero el enojo se acumula y puede salir después con más fuerza.'}],best:'decir con calma lo que te molestó y pedir lo que necesitas; si no funciona, avisar al docente.'},
+{q:'Tu mamá te quita el celular porque pasaste mucho tiempo en él.',o:[{t:'Grito y cierro la puerta',k:2,r:'Probablemente se enojen más y pierdas la confianza para negociar.'},{t:'Me calmo, entiendo la norma y propongo un horario',k:0,r:'Muestras responsabilidad y es más fácil llegar a un acuerdo.'},{t:'Obedezco pero me quedo molesto sin hablar',k:1,r:'Cumples la norma, pero el malestar queda sin resolverse.'}],best:'hablar en un momento tranquilo, entender el motivo y proponer un acuerdo de horarios.'},
+{q:'Sin querer rompiste algo de un compañero.',o:[{t:'Me voy sin decir nada',k:2,r:'La verdad suele saberse y la confianza se daña más por esconderlo que por el accidente.'},{t:'Espero a ver si se da cuenta',k:1,r:'Quizás evites el momento incómodo, pero la preocupación crece.'},{t:'Le cuento, pido disculpas y ofrezco repararlo',k:0,r:'Es valiente y repara la relación. La mayoría de las personas valora la honestidad.'}],best:'contar lo que pasó, pedir disculpas y ofrecer una forma de reparar.'},
+{q:'Un grupo se burla de un compañero y te invitan a unirte.',o:[{t:'Me río para que me acepten',k:2,r:'Haces daño a alguien y puedes sentirte mal contigo después.'},{t:'No participo y me acerco al compañero o aviso a un adulto',k:0,r:'Proteges a quien sufre y actúas con valentía y respeto.'},{t:'Me quedo callado mirando',k:1,r:'No participas, pero quien sufre sigue solo. Puedes hacer más.'}],best:'no sumarte, apoyar a quien lo necesita y avisar a un docente; si te sientes en riesgo, busca un adulto.'}];
+const M=['Escuchar a alguien sin interrumpir','Cumplir un compromiso pendiente','Ayudar en casa sin que me lo pidan','Dar las gracias o un elogio sincero','Pedir disculpas por un error','Hacer 3 respiraciones antes de responder algo que me molestó','Hablar con un adulto de confianza sobre algo que me preocupa','Hacer algo amable por un compañero'];
+const FAM=['Escucha primero: deja que termine y nombra su emoción antes de corregir.','Corrige la conducta, no a la persona: evita etiquetas como «malcriado».','Acuerden pocas normas, claras, y expliquen el porqué.','Hablen en un momento tranquilo, no en medio de la rabia.','Enseña con el ejemplo: pide disculpas cuando te equivoques.','Reconoce el esfuerzo y los avances, no solo los resultados.','Si las dificultades son intensas o duran semanas, consulta al orientador escolar o a un psicólogo.'];
+const $=s=>document.querySelector(s),main=$('#v');
+const st={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let sound=true,tab='ini',ms={s:null,f:null},di=0,dr=null,bt=null,face={cls:'',mood:'Hola, soy NEXO 👋'};
+const vsel=$('#voz'),can='speechSynthesis' in window;
+const esV=()=>can?speechSynthesis.getVoices().filter(x=>/^es/i.test(x.lang)):[];
+const score=x=>(/natural|neural|online/i.test(x.name)?5:0)+(/google/i.test(x.name)?3:0)+(/sabina|dalia|paloma|elena|salome|paulina|monica|luciana|marisol|camila|female|mujer/i.test(x.name)?3:0)+(/^es[-_](CO|419|MX|US)/i.test(x.lang)?2:0);
+function fill(){if(!can)return;const l=esV().sort((a,b)=>score(b)-score(a)),cur=vsel.value;vsel.innerHTML='';l.forEach(v=>{const o=document.createElement('option');o.value=v.name;o.textContent=v.name.replace(/Microsoft |Google /,'')+' ('+v.lang+')';vsel.appendChild(o)});if(cur)vsel.value=cur;vsel.hidden=l.length<2}
+if(can){speechSynthesis.onvoiceschanged=fill;fill()}
+function speak(t){if(!can||!sound)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/gu,''));u.lang='es-CO';const l=esV(),v=l.find(x=>x.name===vsel.value)||l.sort((a,b)=>score(b)-score(a))[0];if(v){u.voice=v;u.lang=v.lang}u.rate=1.3;u.pitch=1.95;u.volume=.95;speechSynthesis.speak(u)}
+$('#snd').onclick=()=>{sound=!sound;$('#snd').textContent=(sound?'🔊':'🔇')+' Audio';if(!sound&&can)speechSynthesis.cancel()};
+vsel.onchange=()=>speak('Hola, soy NEXO. Estoy aquí para ayudarte.');
+const vs=k=>`<div class="vs">📖 <b>${V[k][0]}</b> — ${V[k][1]}</div>`;
+const card=h=>`<div class="card">${h}<button class="say">🔊 Escuchar</button></div>`;
+const safe=()=>`<div class="warn"><b>Importante:</b> habla hoy mismo con un adulto de confianza (familiar, docente u orientador). Si estás en peligro ahora, llama al <b>123</b>. En Colombia también puedes llamar a la <b>Línea 141</b> del ICBF.</div>`;
+const foot=()=>`<p class="foot">NEXO es una herramienta educativa. No es psicólogo, no diagnostica y no reemplaza a un adulto de confianza ni a un profesional. No guarda conversaciones ni pide datos personales.</p>`;
+const faceHTML=()=>`<div class="face ${face.cls}" id="face"><div class="eye l"></div><div class="eye r"></div><div class="mouth"></div></div><p class="mood" id="mood">${face.mood}</p>`;
+function setFace(cls,mood,talk){face={cls,mood};const f=$('#face'),m=$('#mood');if(f){f.className='face '+cls}if(m)m.textContent=mood;if(talk)speak(mood)}
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+const N=s=>norm(s);
+const views={
+ini(){const ks=Object.keys(V),d=new Date(),k=ks[(d.getDate()+d.getMonth())%ks.length];
+return `<h2>Hola 👋</h2>${faceHTML()}<div class="grid">${[['men','💬','Hablar con NEXO'],['cal','🌬️','Calmarme ahora'],['dec','🧭','Resolver un desafío'],['mis','⭐','Mis misiones']].map(x=>`<button class="tile" data-go="${x[0]}"><span>${x[1]}</span>${x[2]}</button>`).join('')}</div><div class="card"><h3>Frase del día</h3>${vs(k)}</div>${foot()}`},
+men(){return `<h2>Mentor NEXO</h2>${faceHTML()}<div class="chat" id="chat">${bubbles()}</div><p style="color:var(--mute);margin:12px 0 4px;font-size:14px">Situaciones frecuentes:</p><div class="chips">${S.map((x,i)=>`<button class="chip" data-s="${i}">${x.t}</button>`).join('')}</div><div class="inrow"><input class="txt" id="libre" placeholder="Escribe lo que pasó…" aria-label="Escribe lo que pasó"><button class="chip" id="enviar">Enviar</button></div>${foot()}`},
+cal(){return `<h2>Calmarme ahora</h2>${faceHTML()}<div class="card center"><div id="bball" class="breath"></div><p id="bt">Respira conmigo: 5 ciclos</p><button class="chip" id="bgo">Empezar</button></div>${card('<h3>Semáforo</h3><p>🔴 <b>Rojo:</b> detente. No hables ni actúes todavía.</p><p>🟡 <b>Amarillo:</b> respira y piensa: ¿qué siento? ¿qué opciones tengo?</p><p>🟢 <b>Verde:</b> elige la opción que cuida a todos y actúa.</p>'+vs('ans'))}<h3>Conoce tus emociones</h3><p style="color:var(--mute)">Toca una emoción para ver cómo se siente.</p><div class="emos">${F.map((f,i)=>`<button class="emo" data-e="${i}" aria-label="${f.n}">${f.e}</button>`).join('')}</div><div id="emoinfo"></div>`},
+dec(){const q=D[di];if(dr===null)return `<h2>Simulador de decisiones</h2><p style="color:var(--mute)">Historia ${di+1} de ${D.length}</p>${card('<p>'+q.q+'</p>')}<p>¿Qué harías?</p>${q.o.map((o,i)=>`<button class="opt" data-d="${i}">${o.t}</button>`).join('')}`;
+const o=q.o[dr],lab=['👍 Esta opción ayuda','🤔 Podría ir mejor','⚠️ Esta opción puede empeorar las cosas'][o.k];
+return `<h2>Simulador de decisiones</h2>${card(`<p><b>${lab}</b></p><p>${o.r}</p><p><b>Una buena idea:</b> ${q.best}</p>${vs('regla')}`)}<div class="row"><button class="chip" data-d="y">↺ Probar otra opción</button><button class="chip" data-d="x">${di+1<D.length?'Siguiente historia →':'Volver a empezar'}</button></div><p style="color:var(--mute)">Aquí no hay buenos ni malos: se aprende de cada decisión.</p>`},
+mis(){const d=st.get('m',[]);const n=d.length;return `<h2>Mis misiones</h2>${faceHTML()}<p>Elige retos pequeños. Lo que importa es tu esfuerzo, no competir con nadie.</p><div class="card"><div class="stars">${M.map((_,i)=>`<span class="${i<n?'on':''}">⭐</span>`).slice(0,8).join('')}</div><p class="center"><b>Llevas ${n} de ${M.length}</b>${n===M.length?' 🎉 ¡Completaste tus misiones!':''}</p>${M.map((m,i)=>`<label class="mis"><input type="checkbox" data-m="${i}" ${d.includes(i)?'checked':''}> ${m}</label>`).join('')}${vs('regla')}</div><button class="lnk" data-mr>Empezar una semana nueva</button><p style="color:var(--mute)">Tu progreso se guarda solo en este aparato.</p>`},
+ayu(){return `<h2>Ayuda y convivencia</h2>${card('<h3>Cómo pedir disculpas</h3><ol><li>Di qué hiciste, sin excusas.</li><li>Reconoce cómo se sintió la otra persona.</li><li>Ofrece reparar el daño.</li><li>Cuida que no se repita.</li></ol>'+vs('perd'))}${card('<h3>Cómo decir que no con respeto</h3><p>Mírale a los ojos, usa un tono tranquilo y explica brevemente: «No quiero hacer eso, prefiero…». Decir que no a algo que te incomoda es válido.</p>'+vs('paz'))}${card('<h3>Si hay acoso, amenazas o violencia</h3><p>No es tu culpa y no tienes que resolverlo solo. Aléjate del lugar, cuéntalo a un adulto de confianza y guarda los detalles de lo que pasó.</p>'+safe())}<h3>Para familias y docentes</h3><div class="card">${FAM.map(t=>`<details><summary>${t.split(/[:.]/)[0]}</summary><p>${t}</p></details>`).join('')}<button class="say">🔊 Escuchar</button></div>${foot()}`}};
+
+let chat=[{w:'b',h:'<p>Hola, soy NEXO 👋 Cuéntame qué pasó con tus palabras, o elige una situación de abajo.</p>'}],typing=false;
+const FUS=[['cal','🌬️ Sí, respirar'],['more','✏️ Contar más'],['reset','↺ Otra situación']];
+const fuChips=()=>'<div class="chips">'+FUS.map(x=>`<button class="chip" data-fu="${x[0]}">${x[1]}</button>`).join('')+'</div>';
+function bubbles(){return chat.map(m=>`<div class="bub ${m.w}">${m.h}</div>`).join('')+(typing?'<div class="bub b typing">● ● ●</div>':'')}
+function paint(){const c=$('#chat');if(c){c.innerHTML=bubbles();c.scrollTop=c.scrollHeight}}
+function plain(h){const d=document.createElement('div');d.innerHTML=h;return d.textContent.replace(/\s+/g,' ')}
+function botSay(h,mood,cls){typing=true;paint();setTimeout(()=>{typing=false;chat.push({w:'b',h});paint();if(mood)setFace(cls||'',mood,false);speak(plain(h))},900)}
+function sStory(s){return `<p><b>${s.t}.</b> ${s.ok}</p><ol>${s.plan.map(p=>`<li>${p}</li>`).join('')}</ol><p>Puedes decir: «${s.frase}»</p>${vs(s.v)}`+(s.serio?safe():'')}
+function sendUser(txt){txt=(txt||'').trim();if(!txt||typing)return;chat.push({w:'u',h:'<p>'+txt.replace(/[<>&]/g,'')+'</p>'});const inp=$('#libre');if(inp)inp.value='';paint();const r=respond(txt);botSay(r.html+fuChips(),r.mood,r.cls)}
+function chipS(i){if(typing)return;const s=S[i];chat.push({w:'u',h:'<p>'+s.t+'</p>'});paint();botSay(sStory(s)+fuChips(),'Te entiendo. Vamos paso a paso.','cal')}
+function followUp(k){
+  if(k==='cal'){stop();tab='cal';render();return}
+  if(k==='more'){botSay('<p>Con gusto. ¿Qué pasó justo antes, y cómo te sentiste? Escríbelo abajo.</p>','Te escucho.','');return}
+  if(k==='reset'){chat=[{w:'b',h:'<p>Hola, soy NEXO 👋 Cuéntame qué pasó con tus palabras, o elige una situación de abajo.</p>'}];typing=false;paint();setFace('','Te escucho.',false)}
+}
+function stop(){clearTimeout(bt);if(can)speechSynthesis.cancel()}
+function render(){main.innerHTML=views[tab]();main.scrollTop=0;document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));if(tab==='ini'&&!face.mood)face.mood='Hola';}
+$('#nav').innerHTML=[['ini','🏠','Inicio'],['men','💬','Mentor'],['cal','🌬️','Calma'],['dec','🧭','Decisiones'],['mis','⭐','Misiones'],['ayu','🤝','Ayuda']].map(x=>`<button data-t="${x[0]}"><span>${x[1]}</span>${x[2]}</button>`).join('');
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(b){stop();tab=b.dataset.t;render()}};
+
+function respond(txt){
+  const t=N(txt),hit=(arr)=>arr.some(w=>t.includes(N(w)));
+  const f=F.find(x=>hit(x.w)), s=S.find(x=>hit(x.w));
+  let html,mood,cls;
+  if(s){html=`<p><b>${s.t}.</b> ${s.ok}</p><ol>${s.plan.map(p=>`<li>${p}</li>`).join('')}</ol><p>Puedes decir: «${s.frase}»</p>${vs(s.v)}`;mood='Te entiendo. Vamos paso a paso.';cls='cal';if(s.serio)html+=safe()}
+  else if(f){html=`<p>Lo que sientes parece ${f.n.toLowerCase()}. Es común notar ${f.body}.</p><p>${f.tool}</p>${vs(f.v)}`;mood='Gracias por contarme.';cls=f.face}
+  else{html=`<p>Gracias por contarme. Puedes elegir una situación de abajo o decirme qué sentiste: ¿enojo, tristeza, miedo o vergüenza?</p>`;mood='Te escucho.';cls=''}
+  html+=`<p class="mut" style="color:var(--mute)">¿Qué pasó justo antes? ¿Quieres practicar una respiración?</p>`;
+  return {html,mood,cls}
+}
+function emoInfo(i){const f=F[i];return card(`<p><b>${f.e} ${f.n}</b></p><p>En mi cuerpo: ${f.body}.</p><p>Qué puedo hacer: ${f.tool}</p>${vs(f.v)}`)}
+function breathe(){stop();const o=$('#bball'),t=$('#bt');if(!o)return;let c=0;const ph=[['Inhala por la nariz',4,1.35],['Sostén el aire',4,1.35],['Suelta despacio por la boca',6,.8]];
+(function step(i){if(c>=5){t.textContent='¡Muy bien! Tu cuerpo se está calmando.';o.style.transform='scale(1)';setFace('cal','¡Muy bien! Lo lograste.',true);return}
+const p=ph[i%3];t.textContent=p[0]+' ('+(c+1)+'/5)';o.style.transitionDuration=p[1]+'s';o.style.transform='scale('+p[2]+')';speak(p[0].split(' ')[0]);if(i%3===2)c++;bt=setTimeout(()=>step(i+1),p[1]*1000)})(0)}
+
+main.onclick=ev=>{const t=ev.target;
+if(t.closest('.say')){const c=t.closest('.card').cloneNode(true);c.querySelectorAll('.say').forEach(x=>x.remove());speak(c.textContent.replace(/\s+/g,' '));return}
+if(t.id==='enviar'){sendUser($('#libre').value);return}
+const fu=t.closest('[data-fu]');if(fu){followUp(fu.dataset.fu);return}
+if(t.id==='bgo'){breathe();return}
+const g=t.closest('[data-go]');if(g){stop();tab=g.dataset.go;render();return}
+const s=t.closest('[data-s]');if(s){chipS(+s.dataset.s);return}
+const f=t.closest('[data-f]');if(f){ms.f=+f.dataset.f;const F0=F[ms.f];setFace(F0.face,'Entiendo que sientes '+F0.n.toLowerCase()+'.',true);render();return}
+if(t.closest('[data-r]')){ms={s:null,f:null};render();return}
+const d=t.closest('[data-d]');if(d){const v=d.dataset.d;if(v==='x'){di=(di+1)%D.length;dr=null}else if(v==='y')dr=null;else dr=+v;render();return}
+const em=t.closest('[data-e]');if(em){const i=+em.dataset.e;document.querySelectorAll('.emo').forEach(x=>x.classList.remove('drag'));$('#emoinfo').innerHTML=emoInfo(i);setFace(F[i].face,'Así se siente '+F[i].n.toLowerCase()+'.',true);return}
+const m=t.closest('[data-m]');if(m){const a=st.get('m',[]),i=+m.dataset.m;const nw=m.checked?[...new Set([...a,i])]:a.filter(x=>x!==i);st.set('m',nw);if(m.checked){setFace('bail','¡Bien hecho! Una misión más.',true)}render();return}
+if(t.closest('[data-mr]')){st.set('m',[]);render()}};
+
+main.addEventListener('keydown',ev=>{if(ev.target.id==='libre'&&ev.key==='Enter'){ev.preventDefault();$('#enviar').click()}});
+main.addEventListener('pointerdown',e=>{const el=e.target.closest('.emo');if(!el)return;el.classList.add('drag');el.setPointerCapture(e.pointerId);el._d=1});
+main.addEventListener('pointermove',e=>{const el=document.querySelector('.emo.drag');if(!el)return;el.style.transform=`translate(${e.movementX*0}px,0)`});
+main.addEventListener('pointerup',e=>{const el=document.querySelector('.emo.drag');if(!el)return;el.classList.remove('drag');const f=$('#face');const r=f?f.getBoundingClientRect():null;if(r&&e.clientX>r.left&&e.clientX<r.right&&e.clientY>r.top&&e.clientY<r.bottom){const i=+el.dataset.e;$('#emoinfo').innerHTML=emoInfo(i);setFace(F[i].face,'Así se siente '+F[i].n.toLowerCase()+'.',true)}el.style.transform='';});
+render();
+if('serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
